@@ -5,8 +5,6 @@
  * - 3 Doctors with different specialties and working hours
  * - 50 Patients
  * - Appointments spread across the current week
- *
- * ✅ PROVIDED - You don't need to modify this file
  */
 
 /**
@@ -15,8 +13,8 @@
 export const MOCK_DOCTORS = [
   {
     id: 'doc-1',
-    name: 'Dr. Sarah Chen',
-    specialty: 'cardiology',
+    name: 'Sarah Chen',
+    specialty: 'Cardiology',
     email: 'sarah.chen@hospital.com',
     phone: '(555) 123-4567',
     workingHours: {
@@ -29,8 +27,8 @@ export const MOCK_DOCTORS = [
   },
   {
     id: 'doc-2',
-    name: 'Dr. Michael Rodriguez',
-    specialty: 'pediatrics',
+    name: 'Michael Rodriguez',
+    specialty: 'Pediatrics',
     email: 'michael.rodriguez@hospital.com',
     phone: '(555) 234-5678',
     workingHours: {
@@ -43,8 +41,8 @@ export const MOCK_DOCTORS = [
   },
   {
     id: 'doc-3',
-    name: 'Dr. Emily Johnson',
-    specialty: 'general-practice',
+    name: 'Emily Johnson',
+    specialty: 'General Practice',
     email: 'emily.johnson@hospital.com',
     phone: '(555) 345-6789',
     workingHours: {
@@ -118,8 +116,10 @@ export const MOCK_PATIENTS = [
  */
 function getWeekDate(dayOffset, hour, minute) {
   const now = new Date();
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - now.getDay() + 1); // Get Monday of current week
+  const day = now.getDay();
+  const diff = now.getDate() - day + (day === 0 ? -6 : 1); // Get Monday
+  const monday = new Date(now.setDate(diff));
+  monday.setHours(0, 0, 0, 0);
 
   const date = new Date(monday);
   date.setDate(monday.getDate() + dayOffset);
@@ -139,14 +139,79 @@ function getEndTime(startTime, durationMinutes) {
 
 /**
  * Appointments spread across the week for all doctors
- *
- * Distribution:
- * - Dr. Sarah Chen (Cardiology): ~20 appointments
- * - Dr. Michael Rodriguez (Pediatrics): ~15 appointments
- * - Dr. Emily Johnson (General Practice): ~20 appointments
  */
 export const MOCK_APPOINTMENTS = [
-  // (appointments same as in TS file, unchanged)
+  // Monday - Dr. Sarah Chen (Cardiology)
+  { id: 'apt-1', patientId: 'pat-1', doctorId: 'doc-1', type: 'checkup', startTime: getWeekDate(0, 9, 0), endTime: getEndTime(getWeekDate(0, 9, 0), 30), status: 'scheduled', notes: 'Regular checkup' },
+  { id: 'apt-2', patientId: 'pat-2', doctorId: 'doc-1', type: 'consultation', startTime: getWeekDate(0, 10, 30), endTime: getEndTime(getWeekDate(0, 10, 30), 60), status: 'scheduled', notes: 'Heart palpitations' },
+  { id: 'apt-3', patientId: 'pat-3', doctorId: 'doc-1', type: 'follow-up', startTime: getWeekDate(0, 14, 0), endTime: getEndTime(getWeekDate(0, 14, 0), 30), status: 'scheduled', notes: 'Post-surgery follow-up' },
+  { id: 'apt-4', patientId: 'pat-4', doctorId: 'doc-1', type: 'checkup', startTime: getWeekDate(0, 15, 30), endTime: getEndTime(getWeekDate(0, 15, 30), 30), status: 'scheduled', notes: '' },
+
+  // Tuesday - Dr. Sarah Chen
+  { id: 'apt-5', patientId: 'pat-5', doctorId: 'doc-1', type: 'procedure', startTime: getWeekDate(1, 9, 30), endTime: getEndTime(getWeekDate(1, 9, 30), 90), status: 'scheduled', notes: 'ECG test' },
+  { id: 'apt-6', patientId: 'pat-6', doctorId: 'doc-1', type: 'checkup', startTime: getWeekDate(1, 13, 0), endTime: getEndTime(getWeekDate(1, 13, 0), 30), status: 'scheduled', notes: '' },
+  { id: 'apt-7', patientId: 'pat-7', doctorId: 'doc-1', type: 'consultation', startTime: getWeekDate(1, 14, 30), endTime: getEndTime(getWeekDate(1, 14, 30), 60), status: 'scheduled', notes: 'Chest pain evaluation' },
+
+  // Wednesday - Dr. Sarah Chen
+  { id: 'apt-8', patientId: 'pat-8', doctorId: 'doc-1', type: 'consultation', startTime: getWeekDate(2, 10, 0), endTime: getEndTime(getWeekDate(2, 10, 0), 60), status: 'scheduled', notes: '' },
+  { id: 'apt-9', patientId: 'pat-9', doctorId: 'doc-1', type: 'checkup', startTime: getWeekDate(2, 15, 0), endTime: getEndTime(getWeekDate(2, 15, 0), 30), status: 'scheduled', notes: '' },
+  { id: 'apt-10', patientId: 'pat-10', doctorId: 'doc-1', type: 'follow-up', startTime: getWeekDate(2, 16, 0), endTime: getEndTime(getWeekDate(2, 16, 0), 30), status: 'scheduled', notes: '' },
+
+  // Thursday - Dr. Sarah Chen
+  { id: 'apt-11', patientId: 'pat-11', doctorId: 'doc-1', type: 'checkup', startTime: getWeekDate(3, 9, 0), endTime: getEndTime(getWeekDate(3, 9, 0), 30), status: 'scheduled', notes: '' },
+  { id: 'apt-12', patientId: 'pat-12', doctorId: 'doc-1', type: 'procedure', startTime: getWeekDate(3, 11, 0), endTime: getEndTime(getWeekDate(3, 11, 0), 90), status: 'scheduled', notes: 'Stress test' },
+  { id: 'apt-13', patientId: 'pat-13', doctorId: 'doc-1', type: 'consultation', startTime: getWeekDate(3, 14, 0), endTime: getEndTime(getWeekDate(3, 14, 0), 60), status: 'scheduled', notes: '' },
+
+  // Friday - Dr. Sarah Chen
+  { id: 'apt-14', patientId: 'pat-14', doctorId: 'doc-1', type: 'checkup', startTime: getWeekDate(4, 9, 30), endTime: getEndTime(getWeekDate(4, 9, 30), 30), status: 'scheduled', notes: '' },
+  { id: 'apt-15', patientId: 'pat-15', doctorId: 'doc-1', type: 'follow-up', startTime: getWeekDate(4, 11, 0), endTime: getEndTime(getWeekDate(4, 11, 0), 30), status: 'scheduled', notes: '' },
+
+  // Monday - Dr. Michael Rodriguez (Pediatrics)
+  { id: 'apt-16', patientId: 'pat-16', doctorId: 'doc-2', type: 'checkup', startTime: getWeekDate(0, 8, 30), endTime: getEndTime(getWeekDate(0, 8, 30), 30), status: 'scheduled', notes: 'Well-child visit' },
+  { id: 'apt-17', patientId: 'pat-17', doctorId: 'doc-2', type: 'consultation', startTime: getWeekDate(0, 11, 0), endTime: getEndTime(getWeekDate(0, 11, 0), 60), status: 'scheduled', notes: 'Fever and cough' },
+  { id: 'apt-18', patientId: 'pat-18', doctorId: 'doc-2', type: 'checkup', startTime: getWeekDate(0, 14, 0), endTime: getEndTime(getWeekDate(0, 14, 0), 30), status: 'scheduled', notes: '' },
+
+  // Tuesday - Dr. Michael Rodriguez
+  { id: 'apt-19', patientId: 'pat-19', doctorId: 'doc-2', type: 'follow-up', startTime: getWeekDate(1, 9, 0), endTime: getEndTime(getWeekDate(1, 9, 0), 30), status: 'scheduled', notes: '' },
+  { id: 'apt-20', patientId: 'pat-20', doctorId: 'doc-2', type: 'checkup', startTime: getWeekDate(1, 10, 30), endTime: getEndTime(getWeekDate(1, 10, 30), 30), status: 'scheduled', notes: 'Vaccination' },
+  { id: 'apt-21', patientId: 'pat-21', doctorId: 'doc-2', type: 'consultation', startTime: getWeekDate(1, 13, 0), endTime: getEndTime(getWeekDate(1, 13, 0), 60), status: 'scheduled', notes: '' },
+
+  // Wednesday - Dr. Michael Rodriguez
+  { id: 'apt-22', patientId: 'pat-22', doctorId: 'doc-2', type: 'checkup', startTime: getWeekDate(2, 8, 30), endTime: getEndTime(getWeekDate(2, 8, 30), 30), status: 'scheduled', notes: '' },
+  { id: 'apt-23', patientId: 'pat-23', doctorId: 'doc-2', type: 'procedure', startTime: getWeekDate(2, 10, 0), endTime: getEndTime(getWeekDate(2, 10, 0), 90), status: 'scheduled', notes: 'Allergy testing' },
+  { id: 'apt-24', patientId: 'pat-24', doctorId: 'doc-2', type: 'follow-up', startTime: getWeekDate(2, 14, 30), endTime: getEndTime(getWeekDate(2, 14, 30), 30), status: 'scheduled', notes: '' },
+
+  // Thursday - Dr. Michael Rodriguez
+  { id: 'apt-25', patientId: 'pat-25', doctorId: 'doc-2', type: 'checkup', startTime: getWeekDate(3, 9, 30), endTime: getEndTime(getWeekDate(3, 9, 30), 30), status: 'scheduled', notes: '' },
+  { id: 'apt-26', patientId: 'pat-26', doctorId: 'doc-2', type: 'consultation', startTime: getWeekDate(3, 11, 30), endTime: getEndTime(getWeekDate(3, 11, 30), 60), status: 'scheduled', notes: 'Growth concerns' },
+
+  // Friday - Dr. Michael Rodriguez
+  { id: 'apt-27', patientId: 'pat-27', doctorId: 'doc-2', type: 'checkup', startTime: getWeekDate(4, 8, 0), endTime: getEndTime(getWeekDate(4, 8, 0), 30), status: 'scheduled', notes: '' },
+  { id: 'apt-28', patientId: 'pat-28', doctorId: 'doc-2', type: 'follow-up', startTime: getWeekDate(4, 10, 0), endTime: getEndTime(getWeekDate(4, 10, 0), 30), status: 'scheduled', notes: '' },
+
+  // Monday - Dr. Emily Johnson (General Practice)
+  { id: 'apt-29', patientId: 'pat-29', doctorId: 'doc-3', type: 'checkup', startTime: getWeekDate(0, 10, 30), endTime: getEndTime(getWeekDate(0, 10, 30), 30), status: 'scheduled', notes: '' },
+  { id: 'apt-30', patientId: 'pat-30', doctorId: 'doc-3', type: 'consultation', startTime: getWeekDate(0, 14, 0), endTime: getEndTime(getWeekDate(0, 14, 0), 60), status: 'scheduled', notes: 'Back pain' },
+  { id: 'apt-31', patientId: 'pat-31', doctorId: 'doc-3', type: 'follow-up', startTime: getWeekDate(0, 16, 0), endTime: getEndTime(getWeekDate(0, 16, 0), 30), status: 'scheduled', notes: '' },
+
+  // Tuesday - Dr. Emily Johnson
+  { id: 'apt-32', patientId: 'pat-32', doctorId: 'doc-3', type: 'checkup', startTime: getWeekDate(1, 11, 0), endTime: getEndTime(getWeekDate(1, 11, 0), 30), status: 'scheduled', notes: 'Annual physical' },
+  { id: 'apt-33', patientId: 'pat-33', doctorId: 'doc-3', type: 'consultation', startTime: getWeekDate(1, 13, 30), endTime: getEndTime(getWeekDate(1, 13, 30), 60), status: 'scheduled', notes: '' },
+  { id: 'apt-34', patientId: 'pat-34', doctorId: 'doc-3', type: 'checkup', startTime: getWeekDate(1, 15, 30), endTime: getEndTime(getWeekDate(1, 15, 30), 30), status: 'scheduled', notes: '' },
+
+  // Thursday - Dr. Emily Johnson
+  { id: 'apt-35', patientId: 'pat-35', doctorId: 'doc-3', type: 'procedure', startTime: getWeekDate(3, 11, 0), endTime: getEndTime(getWeekDate(3, 11, 0), 90), status: 'scheduled', notes: 'Minor procedure' },
+  { id: 'apt-36', patientId: 'pat-36', doctorId: 'doc-3', type: 'checkup', startTime: getWeekDate(3, 15, 30), endTime: getEndTime(getWeekDate(3, 15, 30), 30), status: 'scheduled', notes: '' },
+  { id: 'apt-37', patientId: 'pat-37', doctorId: 'doc-3', type: 'follow-up', startTime: getWeekDate(3, 16, 30), endTime: getEndTime(getWeekDate(3, 16, 30), 30), status: 'scheduled', notes: '' },
+
+  // Friday - Dr. Emily Johnson
+  { id: 'apt-38', patientId: 'pat-38', doctorId: 'doc-3', type: 'checkup', startTime: getWeekDate(4, 10, 0), endTime: getEndTime(getWeekDate(4, 10, 0), 30), status: 'scheduled', notes: '' },
+  { id: 'apt-39', patientId: 'pat-39', doctorId: 'doc-3', type: 'consultation', startTime: getWeekDate(4, 12, 0), endTime: getEndTime(getWeekDate(4, 12, 0), 60), status: 'scheduled', notes: 'Migraine consultation' },
+  { id: 'apt-40', patientId: 'pat-40', doctorId: 'doc-3', type: 'follow-up', startTime: getWeekDate(4, 14, 30), endTime: getEndTime(getWeekDate(4, 14, 30), 30), status: 'scheduled', notes: '' },
+
+  // Saturday - Dr. Emily Johnson
+  { id: 'apt-41', patientId: 'pat-41', doctorId: 'doc-3', type: 'checkup', startTime: getWeekDate(5, 9, 30), endTime: getEndTime(getWeekDate(5, 9, 30), 30), status: 'scheduled', notes: '' },
+  { id: 'apt-42', patientId: 'pat-42', doctorId: 'doc-3', type: 'consultation', startTime: getWeekDate(5, 11, 0), endTime: getEndTime(getWeekDate(5, 11, 0), 60), status: 'scheduled', notes: '' },
 ];
 
 /**

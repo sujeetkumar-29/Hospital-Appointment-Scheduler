@@ -3,22 +3,15 @@
  *
  * This service provides an abstraction layer for accessing appointment data.
  * It's your data access layer - implement the methods to fetch and filter appointments.
- *
- * TODO for candidates:
- * 1. Implement getAppointmentsByDoctor
- * 2. Implement getAppointmentsByDoctorAndDate
- * 3. Implement getAppointmentsByDoctorAndDateRange (for week view)
- * 4. Consider adding helper methods for filtering, sorting, etc.
- * 5. Think about how to structure this for testability
  */
 
 import {
   MOCK_APPOINTMENTS,
   MOCK_DOCTORS,
   MOCK_PATIENTS,
-  getDoctorById,
-  getPatientById,
-} from '@/data/mockData';
+  getDoctorById as getMockDoctorById,
+  getPatientById as getMockPatientById,
+} from '../data/mockData';
 
 /**
  * AppointmentService class
@@ -29,92 +22,115 @@ import {
 export class AppointmentService {
   /**
    * Get all appointments for a specific doctor
-   *
-   * TODO: Implement this method
    */
   getAppointmentsByDoctor(doctorId) {
-    // TODO: Implement - filter MOCK_APPOINTMENTS by doctorId
-    throw new Error('Not implemented - getAppointmentsByDoctor');
+    return new Promise((resolve) => {
+      const appointments = MOCK_APPOINTMENTS.filter(
+        (apt) => apt.doctorId === doctorId
+      );
+      setTimeout(() => resolve(appointments), 250); // simulate latency
+    });
   }
 
   /**
    * Get appointments for a specific doctor on a specific date
-   *
-   * TODO: Implement this method
-   * @param doctorId - The doctor's ID
-   * @param date - The date to filter by
-   * @returns Array of appointments for that doctor on that date
    */
   getAppointmentsByDoctorAndDate(doctorId, date) {
-    // TODO: Implement - filter by doctor AND date
-    // Hint: You'll need to compare dates properly (same day, ignoring time)
-    throw new Error('Not implemented - getAppointmentsByDoctorAndDate');
+    return new Promise((resolve) => {
+      const startOfDay = new Date(date);
+      startOfDay.setHours(0, 0, 0, 0);
+      const endOfDay = new Date(date);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      const appointments = MOCK_APPOINTMENTS.filter((apt) => {
+        if (apt.doctorId !== doctorId) return false;
+        const aptStart = new Date(apt.startTime);
+        return aptStart >= startOfDay && aptStart <= endOfDay;
+      });
+
+      setTimeout(() => resolve(appointments), 250); // simulate latency
+    });
   }
 
   /**
    * Get appointments for a specific doctor within a date range (for week view)
-   *
-   * TODO: Implement this method
-   * @param doctorId - The doctor's ID
-   * @param startDate - Start of the date range
-   * @param endDate - End of the date range
-   * @returns Array of appointments within the date range
    */
   getAppointmentsByDoctorAndDateRange(doctorId, startDate, endDate) {
-    // TODO: Implement - filter by doctor AND date range
-    throw new Error('Not implemented - getAppointmentsByDoctorAndDateRange');
+    return new Promise((resolve) => {
+      const appointments = MOCK_APPOINTMENTS.filter((apt) => {
+        if (apt.doctorId !== doctorId) return false;
+        const aptStart = new Date(apt.startTime);
+        return aptStart >= startDate && aptStart <= endDate;
+      });
+
+      setTimeout(() => resolve(appointments), 250); // simulate latency
+    });
   }
 
   /**
    * Get a populated appointment (with patient and doctor objects)
-   *
-   * This is useful for display purposes where you need patient/doctor details
-   *
-   * TODO: Implement this helper method
    */
   getPopulatedAppointment(appointment) {
-    // TODO: Implement - merge appointment with patient and doctor data
-    // Hint: Use getDoctorById and getPatientById from mockData
-    throw new Error('Not implemented - getPopulatedAppointment');
+    const patient = getMockPatientById(appointment.patientId);
+    const doctor = getMockDoctorById(appointment.doctorId);
+    return {
+      ...appointment,
+      patient,
+      doctor,
+    };
   }
 
   /**
    * Get all doctors
-   *
-   * TODO: Implement this method
    */
   getAllDoctors() {
-    // TODO: Implement - return all doctors
-    throw new Error('Not implemented - getAllDoctors');
+    return MOCK_DOCTORS;
   }
 
   /**
    * Get doctor by ID
-   *
-   * TODO: Implement this method
    */
   getDoctorById(id) {
-    // TODO: Implement - find doctor by ID
-    throw new Error('Not implemented - getDoctorById');
+    return getMockDoctorById(id);
   }
 
   /**
-   * BONUS: Add any other helper methods you think would be useful
-   * Examples:
-   * - Sort appointments by time
-   * - Check for overlapping appointments
-   * - Get appointments by type
-   * - etc.
+   * Get patient by ID
    */
+  getPatientById(id) {
+    return getMockPatientById(id);
+  }
+
+  /**
+   * Sort appointments by start time
+   */
+  sortAppointmentsByTime(appointments) {
+    return [...appointments].sort((a, b) => {
+      return new Date(a.startTime) - new Date(b.startTime);
+    });
+  }
+
+  /**
+   * Check if two appointments overlap
+   */
+  checkOverlap(apt1, apt2) {
+    const start1 = new Date(apt1.startTime);
+    const end1 = new Date(apt1.endTime);
+    const start2 = new Date(apt2.startTime);
+    const end2 = new Date(apt2.endTime);
+
+    return start1 < end2 && start2 < end1;
+  }
+
+  /**
+   * Get appointments by type
+   */
+  getAppointmentsByType(appointments, type) {
+    return appointments.filter((apt) => apt.type === type);
+  }
 }
 
 /**
- * Singleton instance (optional pattern)
- *
- * You can either:
- * 1. Export a singleton instance: export const appointmentService = new AppointmentService();
- * 2. Or let consumers create their own instances: new AppointmentService()
- *
- * Consider which is better for your architecture and testing needs.
+ * Singleton instance
  */
 export const appointmentService = new AppointmentService();
